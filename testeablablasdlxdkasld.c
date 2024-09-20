@@ -3,12 +3,67 @@
 #define MAX 100
 
 float calcularMedia(float valorTotal[], int indiceInscricao) {
-float valorTotalGeral = 0;
-for (int j = 0; j <= indiceInscricao; j++) {
-    valorTotalGeral += valorTotal[j];
+    float valorTotalGeral = 0;
+    for (int j = 0; j < indiceInscricao; j++) {
+        valorTotalGeral += valorTotal[j];
+    }
+    float mediaGeral = valorTotalGeral / indiceInscricao;
+    return mediaGeral;
 }
-float mediaGeral = valorTotalGeral / indiceInscricao;
-return mediaGeral;
+
+float calcularMediaSvcExclusivo(int indiceInscricao, int svcBebidas[], float valorTotal[]) {
+    float somaSvcExclusivo = 0, mediaSvcExclusivo;
+    int contador = 0;
+    for (int j = 0; j<indiceInscricao; j++) {
+        if (svcBebidas[j] == 1) {
+            somaSvcExclusivo += valorTotal[j];
+            contador++;
+        }
+    }
+    return mediaSvcExclusivo = somaSvcExclusivo / contador;
+}
+
+int nInscricaoMaiorValor(int i, int numeroInscricao[], float valorTotal[]) {
+    int numeroInscricaoCalculo[MAX];
+    float valorTotalCalculo[MAX], aux;
+    for (int j = 0; j<i; j++)
+            {
+            numeroInscricaoCalculo[j] = numeroInscricao[j];
+            valorTotalCalculo[j] = valorTotal[j];
+            }
+            for (int j = 0; j<i; j++) {
+                for (int k = 0; k<i-1; k++) {
+                    if (valorTotalCalculo[k] < valorTotalCalculo[k+1]){
+                        aux = valorTotalCalculo[k];
+                        valorTotalCalculo[k] = valorTotalCalculo[k+1];
+                        valorTotalCalculo[k+1] = aux;
+
+                        aux = numeroInscricaoCalculo[k];
+                        numeroInscricaoCalculo[k] = numeroInscricaoCalculo[k+1];
+                        numeroInscricaoCalculo[k+1] = aux;
+                    }
+                }
+            }
+    return numeroInscricaoCalculo[0];
+}
+
+float porcentagemBuffet(int indiceInscricao, int tipoBuffet[]) {
+    int contadorBuffet = 0;
+    float porcentagem;
+    for (int j = 0; j<indiceInscricao; j++) {
+        if (tipoBuffet[j] == 3) {
+            contadorBuffet++;
+        }
+    }
+    return porcentagem = (((float)contadorBuffet/(float)indiceInscricao) * 100);
+}
+
+int calcularQtdPessoas(int indiceInscricao, int qtdPessoas[]) {
+    int qtdPessoaTotal = 0;
+    for (int j = 0; j<indiceInscricao; j++) {
+            qtdPessoaTotal += qtdPessoas[j];
+    }
+    return qtdPessoaTotal;
 }
 
 int main() {
@@ -40,19 +95,22 @@ int main() {
         case 0:
             printf("Encerrando...");
             break;
+
+
+            //Cadastro de clientes
         case 1:
             do
             {
                 system("cls");
                 printf("Numero da inscricao: %d\n", i+1);
                 numeroInscricao[i] = i+1;
-                printf("Tipo de buffet (1 - Basico, 2 - Premium, 3 - Deluxe, 0 - Sair): ");
+                printf("Tipo de buffet (1 - Basico, 2 - Premium, 3 - Deluxe, 0 - Cancelar): ");
                 scanf("%d", &buffet[i]);
 
                 switch(buffet[i])
                 {
                 case 0:
-                    printf("Encerrando"); // vai que o empregado dedo gordo entra no inserir registro sem querer
+                    printf("Encerrando"); // cancelar registro
                     return 0;
                 case 1:
                     valorPessoa[i] = 50;
@@ -66,6 +124,8 @@ int main() {
 
                 default:
                     printf("Opcao Invalida!");
+                    getchar();
+                    scanf("%c", &continuar);
                     break;
                 }
 
@@ -91,6 +151,8 @@ int main() {
             scanf("%d", &svcBebidas[i]);
             if (svcBebidas[i] != 0 && svcBebidas[i] != 1) {
                 printf("Opcao Invalida!\n");
+                getchar();
+                scanf("%c", &continuar);
             }
             } while(svcBebidas[i] != 0 && svcBebidas[i] != 1);
             if (svcBebidas == 0) {
@@ -103,13 +165,22 @@ int main() {
             i++;
             break;
 
+
+            // Resultados e Insights
         case 2:
+            printf("Resultados e Insights\n\n");
             printf("Media do valor de todas as inscricoes: R$ %.2f\n", calcularMedia(valorTotal, i));
+            printf("Media das inscricoes que incluem servico de bebidas exclusivas: R$ %.2f\n", calcularMediaSvcExclusivo(i,svcBebidas,valorTotal));
+            printf("Numero da inscricao com maior valor: %d\n", nInscricaoMaiorValor(i,numeroInscricao,valorTotal));
+            printf("Percentual de inscricoes para o buffet Deluxe: %.2f%%\n", porcentagemBuffet(i,buffet));
+            printf("Total geral de pessoas inscritas: %d\n", calcularQtdPessoas(i,qtdPessoas));
             printf("Pressione enter para continuar");
             getchar();
             scanf("%c", &continuar);
             break;
 
+
+            // Registros pelo valor total decrescente
         case 3:
             for (int j = 0; j<i; j++)
             {
@@ -176,6 +247,8 @@ int main() {
             scanf("%c", &continuar);
             break;
 
+
+            // Registros de inscricoes
         case 4:
             for (int j = 0; j<i; j++) {
                 printf("Numero da inscricao: %d\n",numeroInscricao[j]);
